@@ -1,0 +1,38 @@
+/* 
+    Document   : main
+    Created on : 24.06.2011, 15:21:54
+    Author     : bizzl
+    Description: The Main stylesheet.
+*/
+
+.help { 
+    display: table;
+	min-height: 100%;
+	width: 100%;
+}
+
+.help .content {
+	display: table-cell;
+	padding: 10px;
+}
+
+.help .sidebar { 
+    display: table-cell;
+	border-left: 3px ridge;
+	min-height: 100%;
+	width: 250px;
+	margin: 10px auto;
+}
+
+.help .sidebar .index {
+	min-height: 400px;
+}
+
+.help .sidebar .donate {
+	text-align: center;
+}
+
+.help .sidebar .donate * {
+	display: inline;
+}
+
