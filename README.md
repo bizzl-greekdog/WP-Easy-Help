@@ -1,21 +1,22 @@
 # WP Easy Help #
 
-	1. [About](#about)
-	2. [Installation](#install)
-	3. [How it works](#how)
-	4. [How to provide my own help files](#how2)
-	4. [License](#license)
+1. [About](#about)
+2. [Installation](#install)
+3. [How it works](#how)
+4. [How to provide my own help files](#how2)
+5. [License](#license)
 
 ## <a name="about"/> About ##
 
 *WP Easy Help* is a wordpress plugin that embeds help files
 directly into the administration backend, making them easily accessible to most users.
 It separates this help into three parts:
-	1. General help, which should mostly be for wordpress in itself and which
-	   in case of a network installation is visible to all users.
-	2. Custom help, which is oriented towards individual users in a network installation,
-	   allowing the network operators to address special problems these users have.
-	3. Plugin help, which is an accumulation of all help files belonging to special plugins.
+
+1. General help, which should mostly be for wordpress in itself and which
+   in case of a network installation is visible to all users.
+2. Custom help, which is oriented towards individual users in a network installation,
+   allowing the network operators to address special problems these users have.
+3. Plugin help, which is an accumulation of all help files belonging to special plugins.
 
 ## <a name="install"/> Installation ##
 
@@ -39,9 +40,11 @@ To figure out what to serve *WP Easy Help* uses an additional *GET* parameter (*
 of the plugin name the help files belong to (or *wordpress* for general help or *you* for custom help)
 and the path of the files within the help structure (not including the `help` and the locale prefixes).
 It then searches for the file in several pathes inside the `help` directories, following this order:
-	1. The current locale (see `get_locale()` in the wordpress codex) + the given path.
-	2. `en_US` + the given path.
-	3. `assets` + the given path.
+
+1. The current locale (see `get_locale()` in the wordpress codex) + the given path.
+2. `en_US` + the given path.
+3. `assets` + the given path.
+
 If *WP Easy Help* can't find the file at any of these locations, it will display a simple, non-disruptive error
 message.
 
@@ -50,18 +53,19 @@ message.
 
 There're two reasons and ways to provide your own help files:
 
-	1. When you're a network operator and you want to help a certain customer, put them into their upload directory.
-	2. When you're a plugin developer, put them into your plugins directory (e.g. where the file lies that wordpress reads the definitions from)
+1. When you're a network operator and you want to help a certain customer, put them into their upload directory.
+2. When you're a plugin developer, put them into your plugins directory (e.g. where the file lies that wordpress reads the definitions from)
 
 In either case you have to comply to a certain structure:
-	a. There has to be a `help` directory at the given location.
-	b. It must contain at least a directory `en_US`, for the english help. Whenever you don't include an english help, god kills a kitten.
-	c. The `help` directory can contain an `assets` directory for language independent images, videos and more.
-	d. For every locale you want to offer help files for there must be a directory, e.g. if you want to offer british english there
-       has the be an `en_GB`, for german `de_DE`, and so on.
-	e. In every locale directory (including `en_US`) there must be an `index.html`.
-	f. Within the locale directories you're free to go, but you should keep it the same over all locales, to provide easy fallbacks for missing translations.
-	   You should also refrain from using anything but ASCII for the filenames.
+
+a. There has to be a `help` directory at the given location.
+b. It must contain at least a directory `en_US`, for the english help. Whenever you don't include an english help, god kills a kitten.
+c. The `help` directory can contain an `assets` directory for language independent images, videos and more.
+d. For every locale you want to offer help files for there must be a directory, e.g. if you want to offer british english there
+   has the be an `en_GB`, for german `de_DE`, and so on.
+e. In every locale directory (including `en_US`) there must be an `index.html`.
+f. Within the locale directories you're free to go, but you should keep it the same over all locales, to provide easy fallbacks for missing translations.
+   You should also refrain from using anything but ASCII for the filenames.
 
 ## <a name="license"/> License ##
 
