@@ -43,7 +43,7 @@ msgid "General"
 msgstr ""
 
 #: src/main.php:302
-msgid "Especially for you"
+msgid "Individual"
 msgstr ""
 
 #: src/main.php:307

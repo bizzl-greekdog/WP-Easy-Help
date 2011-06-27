@@ -205,6 +205,9 @@ class WP_Easy_Help {
 
 			foreach (array('#</?(body|html)[^>]*>#i', '#<head[^>]*>.*</head>#is', '#<!(?!--)[^>]+>#') as $pattern)
 				$content = preg_replace($pattern, '', $content);
+			
+			foreach (array('script[^>]*src=', 'embed', 'object', 'link') as $forbidden)
+				$content = preg_replace("#<{$forbidden}[^>]*>(?:.*?</{$forbidden}[^>]*>)?#i", '', $content);
 
 			$cbx = new CallbackContext(array(__CLASS__, 'rebase_href'), array($request_base, $asset_base_path, $asset_base_url));
 			$content = preg_replace_callback('#href="([^"]+)"#', $cbx->cb(), $content);
@@ -299,7 +302,7 @@ class WP_Easy_Help {
 						));
 				if ($index) {
 					$index = self::load_file($index, 'you', $upd['basedir'], $upd['baseurl']);
-					$page->append(h(__('Especially for you', self::$domain), 1), p($index['content']));
+					$page->append(h(__('Individual', self::$domain), 1), p($index['content']));
 				}
 			}
 

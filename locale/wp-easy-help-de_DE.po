@@ -43,8 +43,8 @@ msgid "General"
 msgstr "Allgemein"
 
 #: src/main.php:302
-msgid "Especially for you"
-msgstr "Speziell f&uuml;r Sie"
+msgid "Individual"
+msgstr "Individuell"
 
 #: src/main.php:307
 msgid "Plugins"
