@@ -1,0 +1,33 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>How to provide my own help files</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<p>There're two reasons and ways to provide your own help files:</p>
+
+		<ol>
+			<li>When you're a network operator and you want to help a certain customer, put them into their upload directory.</li>
+			<li>When you're a plugin developer, put them into your plugins directory (e.g. where the file lies that wordpress reads the definitions from)</li>
+		</ol>
+
+		<p>In either case you have to comply to a certain structure:</p>
+
+		<p>
+			<ol>
+				<li>There has to be a <code>help</code> directory at the given location.</li>
+				<li>It must contain at least a directory <code>en_US</code>, for the english help. Whenever you don't include an english help, god kills a kitten.</li>
+				<li>The <code>help</code> directory can contain an <code>assets</code> directory for language independent images, videos and more.</li>
+				<li>For every locale you want to offer help files for there must be a directory, e.g. if you want to offer british english there has the be an <code>en_GB</code>, for german <code>de_DE</code>, and so on.</li>
+				<li>In every locale directory (including <code>en_US</code>) there must be an <code>index.html</code>.</li>
+				<li>Within the locale directories you're free to go, but you should keep it the same over all locales, to provide easy fallbacks for missing translations. You should also refrain from using anything but ASCII for the filenames.</li>
+			</ol>
+		</p>
+
+</body>
+</html>

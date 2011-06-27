@@ -58,13 +58,13 @@ There're two reasons and ways to provide your own help files:
 
 In either case you have to comply to a certain structure:
 
-a. There has to be a `help` directory at the given location.
-b. It must contain at least a directory `en_US`, for the english help. Whenever you don't include an english help, god kills a kitten.
-c. The `help` directory can contain an `assets` directory for language independent images, videos and more.
-d. For every locale you want to offer help files for there must be a directory, e.g. if you want to offer british english there
+1. There has to be a `help` directory at the given location.
+2. It must contain at least a directory `en_US`, for the english help. Whenever you don't include an english help, god kills a kitten.
+3. The `help` directory can contain an `assets` directory for language independent images, videos and more.
+4. For every locale you want to offer help files for there must be a directory, e.g. if you want to offer british english there
    has the be an `en_GB`, for german `de_DE`, and so on.
-e. In every locale directory (including `en_US`) there must be an `index.html`.
-f. Within the locale directories you're free to go, but you should keep it the same over all locales, to provide easy fallbacks for missing translations.
+5. In every locale directory (including `en_US`) there must be an `index.html`.
+6. Within the locale directories you're free to go, but you should keep it the same over all locales, to provide easy fallbacks for missing translations.
    You should also refrain from using anything but ASCII for the filenames.
 
 ## <a name="license"/> License ##

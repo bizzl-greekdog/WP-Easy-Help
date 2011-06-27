@@ -32,9 +32,7 @@ if (!function_exists('p')) {
 
 	function p($text) {
 		$p = tag('p', true);
-		return
-
-				$p->append($text);
+		return $p->append($text);
 	}
 
 }

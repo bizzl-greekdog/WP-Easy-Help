@@ -1,0 +1,37 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>How it works</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<p>
+			<em>WP Easy Help</em> utilizes static html files, which at their best could also be used completely
+			independent from the plugin. To seamlessly integrate them into the interface of the
+			administration backend it scans and removes the <em>head</em>, deletes the <em>body</em>, <em>html</em> and any <em>DOCTYPE</em> tags
+			and modifies all remaining <em>href</em> and <em>src</em> attributes pointing to local (from wordpress POV) files.
+			At the moment <em>WP Easy Help</em> doesn't cache thoses cleaned files, yet.
+		</p>
+
+		<p>
+			To figure out what to serve <em>WP Easy Help</em> uses an additional <em>GET</em> parameter (<em>entry</em>), which consists
+			of the plugin name the help files belong to (or <em>wordpress</em> for general help or <em>you</em> for custom help)
+			and the path of the files within the help structure (not including the <code>help</code> and the locale prefixes).
+			It then searches for the file in several pathes inside the <code>help</code> directories, following this order:
+		</p>
+
+		<ol>
+			<li>The current locale (see <code>get_locale()</code> in the wordpress codex) + the given path.</li>
+			<li><code>en_US</code> + the given path.</li>
+			<li><code>assets</code> + the given path.</li>
+		</ol>
+		<p>
+			If <em>WP Easy Help</em> can't find the file at any of these locations, it will display a simple, non-disruptive error
+			message.
+		</p>
+	</body>
+</html>

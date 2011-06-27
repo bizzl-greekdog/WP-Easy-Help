@@ -10,18 +10,35 @@
   License: GPLv3
  */
 
-//if (!function_exists('join_path')) {
+if (!function_exists('join_path')) {
 
-function __join_path() {
-	$fuck = func_get_args();
-	for ($i = 0; $i < count($fuck); $i++)
-		if (is_array($fuck[$i]))
-			array_splice($fuck, $i, 1, $fuck[$i]);
-	$f = implode(DIRECTORY_SEPARATOR, $fuck);
-	return preg_replace('/(?<!:)\\' . DIRECTORY_SEPARATOR . '+/', DIRECTORY_SEPARATOR, $f);
+	function join_path() {
+		$fuck = func_get_args();
+		for ($i = 0; $i < count($fuck); $i++)
+			if (is_array($fuck[$i]))
+				array_splice($fuck, $i, 1, $fuck[$i]);
+		$f = implode(DIRECTORY_SEPARATOR, $fuck);
+		return preg_replace('/(?<!:)\\' . DIRECTORY_SEPARATOR . '+/', DIRECTORY_SEPARATOR, $f);
+	}
+
 }
 
-//}
+
+if (!function_exists('mime_content_type')) {
+	
+	// Sh***, mime_content_type is missing!
+	// We'll have to emulate it!
+	function mime_content_type($file) {
+		if (preg_match('/\.(m4v|mp4|webm|mov|avi|ogv)$/i', $file))
+			return 'video/any';
+		if (preg_match('/\.(mp3|wav|au|snd|ogg|oga|aac)$/i', $file))
+			return 'audo/any';
+		if (preg_match('/\.(jp[eg]{1,2}|gif|png|apng|mng|webp)$/i', $file))
+			return 'image/any';
+		return 'text/any';
+	}
+	
+}
 
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'tag.php');
 
@@ -44,9 +61,9 @@ class LookUpPath {
 
 	public function lookup($filename) {
 		$f = func_get_args();
-		$f2 = __join_path($f);
+		$f2 = join_path($f);
 		foreach ($this->pathes as $path) {
-			$f = __join_path($path, $f2);
+			$f = join_path($path, $f2);
 			if (file_exists($f))
 				return $f;
 		}
@@ -93,7 +110,7 @@ class Wordpress_Administration_Online_Help {
 	}
 
 	protected static function init_l10n() {
-		$j = __join_path(self::$base, 'locale');
+		$j = join_path(self::$base, 'locale');
 		load_plugin_textdomain(self::$domain, false, $j);
 	}
 
@@ -109,8 +126,8 @@ class Wordpress_Administration_Online_Help {
 	}
 	
 	public static function init_scripts() {
-		error_log(__join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
-		wp_enqueue_style('woah-main', __join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
+		error_log(join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
+		wp_enqueue_style('woah-main', join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
 	}
 
 	public static function print_scripts() {
@@ -146,12 +163,12 @@ class Wordpress_Administration_Online_Help {
 		if (preg_match('#^[a-z0-9]+://#', $matches[1]))
 			return $matches[0];
 		if (preg_match('#^(\.\./)+assets#', $matches[1]))
-			$src = __join_path($asset_base_url, 'help', preg_replace('#^(\.\./)+#', '', $matches[1]));
+			$src = join_path($asset_base_url, 'help', preg_replace('#^(\.\./)+#', '', $matches[1]));
 		else
 			$src = lookup($matches[1], array(
-				__join_path($asset_base_path, 'help', get_locale()),
-				__join_path($asset_base_path, 'help', 'en_US'),
-				__join_path($asset_base_path, 'help', 'assets')
+				join_path($asset_base_path, 'help', get_locale()),
+				join_path($asset_base_path, 'help', 'en_US'),
+				join_path($asset_base_path, 'help', 'assets')
 					));
 
 		if ($asset_base_url[strlen($asset_base_url) - 1] != '/')
@@ -168,7 +185,7 @@ class Wordpress_Administration_Online_Help {
 		if (preg_match('#^[a-z0-9]+://#', $matches[1]) || preg_match('/^#/', $matches[1]))
 			return $matches[0];
 		if (preg_match('#^(\.\./)+assets#', $matches[1]))
-			return 'href="' . __join_path($asset_base_url, 'help', preg_replace('#^(\.\./)+#', '', $matches[1])) . '" target="_blank"';
+			return 'href="' . join_path($asset_base_url, 'help', preg_replace('#^(\.\./)+#', '', $matches[1])) . '" target="_blank"';
 		return "href=\"admin.php?page=online-help&entry={$request_base}/{$matches[1]}\"";
 	}
 
@@ -230,14 +247,15 @@ class Wordpress_Administration_Online_Help {
 			$sidebar = div()->addClass('sidebar');
 
 			$file = lookup('index.html', array(
-				__join_path($base_path, 'help', get_locale()),
-				__join_path($base_path, 'help', 'en_US'),
-				__join_path($base_path, 'help', 'assets')
+				join_path($base_path, 'help', get_locale()),
+				join_path($base_path, 'help', 'en_US'),
+				join_path($base_path, 'help', 'assets')
 					));
 			if ($file) {
 				$file = self::load_file($file, $who, $base_path, $base_url);
 				$sidebar->append(div($file['content'])->addClass('index'));
-				if ($file['donate'])
+				if ($file['donate']) {
+					$sidebar->append(h(__('Is this helpful? Then please donate!', self::$domain), 4)->addClass('donate'));
 					foreach ($file['donate'] as $donate) {
 						$donate = preg_split('#: *#', $donate, 2);
 						if ($donate[0] == 'paypal')
@@ -245,12 +263,13 @@ class Wordpress_Administration_Online_Help {
 						elseif ($donate[0] == 'flattr')
 							$sidebar->append(self::do_flattr_button($donate[1]));
 					}
+				}
 			}
 
 			$file = lookup($what, array(
-				__join_path($base_path, 'help', get_locale()),
-				__join_path($base_path, 'help', 'en_US'),
-				__join_path($base_path, 'help', 'assets')
+				join_path($base_path, 'help', get_locale()),
+				join_path($base_path, 'help', 'en_US'),
+				join_path($base_path, 'help', 'assets')
 					));
 			if ($file) {
 				$file = self::load_file($file, $who, $base_path, $base_url);
@@ -264,8 +283,8 @@ class Wordpress_Administration_Online_Help {
 			$page->append(h(sprintf(__('Welcome %s', self::$domain), $current_user->data->display_name), 1));
 
 			$index = lookup('index.html', array(
-				__join_path(get_home_path(), 'help', get_locale()),
-				__join_path(get_home_path(), 'help', 'en_US'),
+				join_path(get_home_path(), 'help', get_locale()),
+				join_path(get_home_path(), 'help', 'en_US'),
 					));
 			if ($index) {
 				$index = self::load_file($index, 'wordpress', get_home_path(), get_site_url());
@@ -275,8 +294,8 @@ class Wordpress_Administration_Online_Help {
 			if (is_multisite()) {
 				$upd = wp_upload_dir();
 				$index = lookup('index.html', array(
-					__join_path($upd['basedir'], 'help', get_locale()),
-					__join_path($upd['basedir'], 'help', 'en_US'),
+					join_path($upd['basedir'], 'help', get_locale()),
+					join_path($upd['basedir'], 'help', 'en_US'),
 						));
 				if ($index) {
 					$index = self::load_file($index, 'you', $upd['basedir'], $upd['baseurl']);
@@ -290,8 +309,8 @@ class Wordpress_Administration_Online_Help {
 			foreach (self::$plugins as $plugin) {
 				$base_path = dirname($plugin);
 				$index = lookup('index.html', array(
-					__join_path($base_path, 'help', get_locale()),
-					__join_path($base_path, 'help', 'en_US')
+					join_path($base_path, 'help', get_locale()),
+					join_path($base_path, 'help', 'en_US')
 						));
 				if ($index) {
 					$p = get_plugin_data($plugin);
