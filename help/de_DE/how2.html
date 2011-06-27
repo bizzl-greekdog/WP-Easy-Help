@@ -1,0 +1,33 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Wie kann man seine eigenen Dokumente einbinden?</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<p>Es gibt zwei Gr&uuml;nde und entsprechend leicht verschiedene Wege eigene Dokumente einzubinden:</p>
+
+		<ol>
+			<li>Wenn Sie ein Netzwerkbetreiber sind und einem speziellen Benutzer/Blog helfen wollen, geh&ouml;ren sie in das Uploadverzeichnis des jeweiligen Blogs.</li>
+			<li>Wenn Sie ein Erweiterungsentwickler sind geh&ouml;ren die Dokumente in das Verzeichnis ihrer Erweiterung (also im gleichen Verzeichnis wie die Datei aus der Wordpress die Erweiterungsdefinition liest).</li>
+		</ol>
+
+		<p>In beiden F&auml;llen m&uuml;ssen die Dokumente eine gewisse Struktur aufweisen:</p>
+
+		<p>
+			<ol>
+				<li>Es muss sich ein <code>help</code>-Verzeichnis am jeweiligen Ort befinden.</li>
+				<li>Dieses muss mindestens das Verzeichnis <code>en_US</code> enthalten, welches die englischen Dokumente beherbergt.</li>
+				<li>Das <code>help</code>-Verzeichnis kann ein <code>assets</code>-Verzeichnis f&uuml;r sprachunabh&auml;ngige Bilder, Videos und mehr enthalten.</li>
+				<li>F&uuml;r jede Sprache, in der die Hilfe angeboten werden soll muss ein Verzeichnis vorhanden sein, wenn sie zum Beispiel britisches Englisch anbeiten wollen muss <code>en_GB</code> exisitieren, f&uuml;r Deutsch <code>de_DE</code>, und so weiter.</li>
+				<li>In jedem Sprachverzeichnis (inklusive <code>en_US</code>) muss eine Datei <code>index.html</code> enthalten sein.</li>
+				<li>Abgesehen davon haben steht Ihnen der Aufbau ihrer Hilfe frei, allerdings ist es empfehlenswert in allen Sprachen die gleiche Struktur zu verwenden um einfache Alternativen f&uuml;r fehlende &Uuml;bersetzungen zu haben. Au&szlig;erdem sollten sie f&uuml;r die Dateinamen nur ASCII-Zeichen verwenden.</li>
+			</ol>
+		</p>
+
+</body>
+</html>

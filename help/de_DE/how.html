@@ -1,0 +1,36 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Wie funktioniert <!-- diese Sch**** --> es? (technische Einzelheiten)</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>
+	<body>
+		<p>
+			<em>WP Easy Help</em> benutzt statische HTML-Dateien, welche im besten Fall auch komplett
+			unabh&auml;ngig vom Plugin verwendet werden k&ouml:nnen. Um diese nahtlos in das Backend einbinden zu k&ouml;nnen
+			scannt und entfernt es den <em>head</em>-Tag, l&ouml;scht die <em>body</em>-, <em>html</em>- und jegliche <em>DOCTYPE</em>-Tags
+			ver&auml;ndert alle verbleibenden <em>href</em> -und <em>src</em>-Attribute welche auf (aus Sicht von Wordpress) lokale Dateien  verweisen.
+			Im Moment speichert <em>WP Easy Help</em> diese Modifikationen noch nicht zwischen.
+		</p>
+
+		<p>
+			Im herauszufinden was es zeigen soll  benutzt <em>WP Easy Help</em> einen zus&auml;tzlichen <em>GET</em>-Parameter (<em>entry</em>), welcher aus
+			aus der zur Hilfe geh&ouml;rigen Erweiterung (oder <em>wordpress</em> f&uuml;r Allgemeine Hilfe oder <em>you</em> f&uuml;r Individuelle Hilfe)
+			und dem Dateipfad innerhalb der Verzeichnisstruktur (exklusive <code>help</code> und dem Lokalisationsprefix) besteht.
+			Die Erweiterung sucht nun die tats&auml;chliche Datei innerhalb mehrere Pfade im <code>help</code>-Verzeichnis in folgender Reihenfolge:
+		</p>
+
+		<ol>
+			<li>Dem aktuellen Lokalisationsprefix (siehe hierzu <code>get_locale()</code> im Wordpress Codex) und dem gegebenen Pfad.</li>
+			<li><code>en_US</code> und dem gegebenen Pfad.</li>
+			<li><code>assets</code> und dem gegebenen Pfad.</li>
+		</ol>
+		<p>
+			Falls <em>WP Easy Help</em> die Datei an keiner dieser Stellen finden kann wird eine einfache, nicht-st&ouml;rende Fehlermeldung gezeigt.
+		</p>
+	</body>
+</html>

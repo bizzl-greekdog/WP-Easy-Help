@@ -126,7 +126,7 @@ class WP_Easy_Help {
 	}
 	
 	public static function init_scripts() {
-		error_log(join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
+//		error_log(join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
 		wp_enqueue_style('woah-main', join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
 	}
 
@@ -253,7 +253,7 @@ class WP_Easy_Help {
 					));
 			if ($file) {
 				$file = self::load_file($file, $who, $base_path, $base_url);
-				$sidebar->append(div($file['content'])->addClass('index'));
+				$sidebar->append(h($file['title'], 4)->addClass('title'), div($file['content'])->addClass('index'));
 				if ($file['donate']) {
 					$sidebar->append(h(__('Is this helpful? Then please donate!', self::$domain), 4)->addClass('donate'));
 					foreach ($file['donate'] as $donate) {
@@ -273,7 +273,7 @@ class WP_Easy_Help {
 					));
 			if ($file) {
 				$file = self::load_file($file, $who, $base_path, $base_url);
-				$page->append(div($file['content'])->addClass('content'));
+				$page->append(div(h($file['title'], 1), $file['content'])->addClass('content'));
 			} else {
 				$page->append(div(__('Whoops, looks like this page is missing!', self::$domain))->addClass('content'));
 			}

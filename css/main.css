@@ -24,6 +24,10 @@
 	margin: 10px auto;
 }
 
+.help .sidebar .title {
+	text-align: center;
+}
+
 .help .sidebar .index {
 	min-height: 400px;
 }

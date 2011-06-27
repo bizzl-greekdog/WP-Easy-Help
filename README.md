@@ -12,11 +12,9 @@
 directly into the administration backend, making them easily accessible to most users.
 It separates this help into three parts:
 
-1. General help, which should mostly be for wordpress in itself and which
-   in case of a network installation is visible to all users.
-2. Custom help, which is oriented towards individual users in a network installation,
-   allowing the network operators to address special problems these users have.
-3. Plugin help, which is an accumulation of all help files belonging to special plugins.
+1. G**eneral help**, which should mostly be for wordpress in itself and which in case of a network installation is visible to all users.
+2. **Custom help**, which is oriented towards individual blogs in a network installation, allowing the network operators to address special problems users of these blogs might have.
+3. **Plugin help**, which is an accumulation of all help files belonging to special plugins.
 
 ## <a name="install"/> Installation ##
 
@@ -24,7 +22,7 @@ Currently *WP Easy Help* consists of two parts: a main help directory (not yet a
 which goes straight into the wordpress root directory, and the actual plugin which goes
 to either `wp-content/mu-plugins` or `wp-content/plugins`. In the later case you also need
 to activate it.
-Custom help files go to the users upload directory into a new `help` directory.
+Custom help files go to the blogs upload directory into a new `help` directory.
 Plugins have to bring their own help files. This way they're always up to date
 with each plugins capabilities.
 
