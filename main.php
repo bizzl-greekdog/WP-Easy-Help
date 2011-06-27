@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Plugin Name: Wordpress Online Admin Help
+  Plugin Name: WP Easy Help
   Plugin URI:
   Description: A help system that integrates into the wordpress admin panel.
   Version: 1.0.0
@@ -86,7 +86,7 @@ class Wordpress_Administration_Online_Help {
 
 	protected static $domain = 'wordpress-online-admin-help';
 	protected static $base = '';
-	protected static $plugins = NULL;
+	protected static $plugins = array();
 
 	protected static function init_base() {
 		self::$base = basename(dirname(__FILE__));
@@ -100,7 +100,9 @@ class Wordpress_Administration_Online_Help {
 	public static function init() {
 		self::init_base();
 		self::init_l10n();
-		self::$plugins = array_merge(wp_get_active_network_plugins(), wp_get_active_and_valid_plugins());
+		if (function_exists('wp_get_active_network_plugins'))
+			self::$plugins = wp_get_active_network_plugins();
+		self::$plugins = array_merge(self::$plugins, wp_get_active_and_valid_plugins());
 		add_action('admin_menu', array(__CLASS__, 'menu_init'));
 		add_action('wp_print_scripts', array(__CLASS__, 'print_scripts'));
 		add_action('admin_init', array(__CLASS__, 'init_scripts'));
