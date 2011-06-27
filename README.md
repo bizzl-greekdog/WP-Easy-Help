@@ -3,7 +3,7 @@
 1. [About](#about)
 2. [Installation](#install)
 3. [How it works](#how)
-4. [How to provide my own help files](#how2)
+4. [How to provide your own help files](#how2)
 5. [License](#license)
 
 ## <a name="about"/> About ##
@@ -49,7 +49,7 @@ If *WP Easy Help* can't find the file at any of these locations, it will display
 message.
 
 
-## <a name="how2"/> How to provide my own help files ##
+## <a name="how2"/> How to provide your own help files ##
 
 There're two reasons and ways to provide your own help files:
 
