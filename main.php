@@ -99,9 +99,9 @@ class CallbackContext {
 
 }
 
-class Wordpress_Administration_Online_Help {
+class WP_Easy_Help {
 
-	protected static $domain = 'wordpress-online-admin-help';
+	protected static $domain = 'wp-easy-help';
 	protected static $base = '';
 	protected static $plugins = array();
 
@@ -328,4 +328,4 @@ class Wordpress_Administration_Online_Help {
 
 }
 
-Wordpress_Administration_Online_Help::init();
+WP_Easy_Help::init();
