@@ -58,7 +58,6 @@ if (!function_exists('h')) {
 
 if (!function_exists('iframe')) {
 
-
 	function iframe($src, $noframe = null) {
 		if (!$noframe)
 			$noframe = __('This feature requires inline frames. You have iframes disabled or your browser does not support them.');
@@ -89,17 +88,42 @@ if (!function_exists('script')) {
 
 if (!function_exists('pre')) {
 
-	function
-	pre() {
+	function pre() {
 		$pre = tag('pre');
+		$elements = func_get_args();
+		foreach ($elements as $element)
+			$pre->append("\n", htmlentities2(print_r($element, true)));
+		return $pre;
+	}
+
+}
+
+if (!function_exists('code')) {
+
+	function code() {
+		$pre = tag('code')->css(array(
+			'white-space' => 'pre'
+		));
 
 		$elements = func_get_args();
-		foreach (
-		$elements as $element)
-			$pre->append("\n", htmlentities2(print_r($element, true)));
-		return
+		foreach ($elements as $element)
+			$pre->append("\n", $code);
+		return $pre;
+	}
 
-				$pre;
+}
+
+if (!function_exists('options')) {
+
+	function options($elements, $selected) {
+		$g = group();
+		foreach ($elements as $value => $key) {
+			$m = tag('option')->attr('value', $value)->append($key);
+			if ($selected == $value)
+				$m->attr('selected', 'selected');
+			$g->append($m);
+		}
+		return $g;
 	}
 
 }
@@ -107,15 +131,12 @@ if (!function_exists('pre')) {
 if (!function_exists('label')) {
 
 	function label($for, $text) {
-		return
-
-				tag('label')->attr('for', $for)->append($text);
+		return tag('label')->attr('for', $for)->append($text);
 	}
 
 }
 
-if (!function_exists('checkbox'
-)) {
+if (!function_exists('checkbox')) {
 
 	function checkbox($name, $id, $checked = false, $text = false, $value = false) {
 		$cb = tag('input')->attr(array(
@@ -124,8 +145,6 @@ if (!function_exists('checkbox'
 					'name' => $name
 				));
 
-
-
 		if ($checked)
 			$cb->attr('checked', 'checked');
 
@@ -133,19 +152,15 @@ if (!function_exists('checkbox'
 			$cb->attr('value', $value);
 
 		if ($text)
-			$cb
-					= group($cb, label($id, $text), br());
+			$cb = group($cb, label($id, $text), br());
 		return $cb;
 	}
 
 }
 
-if (
-		!function_exists('img')) {
+if (!function_exists('img')) {
 
-	function img
-	(
-	$src, $alt = '') {
+	function img($src, $alt = '') {
 
 		return tag('img')->attr(array(
 					'src' => $src,
@@ -159,10 +174,6 @@ if (
 if (!function_exists('video')) {
 
 	function video($src) {
-
-
-
-
 		return tag('video')->attr('src', $src);
 	}
 

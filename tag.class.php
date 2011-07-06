@@ -165,7 +165,8 @@ if (!function_exists('tag')) {
 
 		private function apply($method, $args) {
 			foreach ($this->children as $child) {
-				call_user_method($method, $child, $args);
+				if (method_exists($child, $method))
+					call_user_method($method, $child, $args);
 			}
 		}
 
@@ -187,6 +188,7 @@ if (!function_exists('tag')) {
 			$args = func_get_args();
 			parent::append($args);
 			$this->apply('addClass', $this->classes);
+			return $this;
 		}
 
 		public function attr($name, $value = NULL) {
