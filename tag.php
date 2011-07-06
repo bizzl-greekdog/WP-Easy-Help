@@ -100,14 +100,14 @@ if (!function_exists('pre')) {
 
 if (!function_exists('code')) {
 
-	function code() {
+	function code($code) {					
 		$pre = tag('code')->css(array(
 			'white-space' => 'pre'
 		));
 
 		$elements = func_get_args();
 		foreach ($elements as $element)
-			$pre->append("\n", $code);
+			$pre->append($code);
 		return $pre;
 	}
 
