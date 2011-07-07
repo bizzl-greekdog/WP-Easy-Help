@@ -99,11 +99,49 @@ class CallbackContext {
 
 }
 
+if (!class_exists('WpOption')) {
+	class WpOption {
+		private $key = '';
+		private $default = '';
+		
+		public function	__construct($key, $default) {
+			$this->key = $key;
+			$this->default = $default;
+		}
+		
+		public function get() {
+			$v = get_option($this->key, NULL);
+			if ($v === NULL)
+				$v = $this->default;
+			if (is_serialized($v))
+				$v = unserialize($v);
+			return $v;
+		}
+		
+		public function set($new) {
+			return update_option($this->key, maybe_serialize($new));
+		}
+		
+		public function __invoke($p = NULL) {
+			if ($p === NULL)
+				return $this->get();
+			else
+				return $this->set($p);
+		}
+	}
+}
+
 class WP_Easy_Help {
 
 	protected static $domain = 'wp-easy-help';
 	protected static $base = '';
 	protected static $plugins = array();
+	protected static $display_options = 'wp_easy_help_display_options';
+	protected static $display_options_default = array(
+				'show-general' => true,
+				'show-custom' => true,
+				'show-plugin' => true,
+	);
 
 	protected static function init_base() {
 		self::$base = basename(dirname(__FILE__));
@@ -117,6 +155,7 @@ class WP_Easy_Help {
 	public static function init() {
 		self::init_base();
 		self::init_l10n();
+		self::$display_options = new WpOption(self::$display_options, self::$display_options_default);
 		if (function_exists('wp_get_active_network_plugins'))
 			self::$plugins = wp_get_active_network_plugins();
 		self::$plugins = array_merge(self::$plugins, wp_get_active_and_valid_plugins());
@@ -126,8 +165,64 @@ class WP_Easy_Help {
 	}
 	
 	public static function init_scripts() {
-//		error_log(join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
+		if (!isset($_REQUEST['entry']))
+			add_filter('screen_settings', array(__CLASS__, 'screen_options'), 10, 2);
 		wp_enqueue_style('woah-main', join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
+		wp_enqueue_script('jquery');
+		
+		
+		$px = self::$domain . '-screen-options-';
+		if (isset($_POST["{$px}screen-options"])) {
+			self::$display_options->set(array_merge(
+				self::$display_options->get(),
+				array(
+					'show-general' => isset($_POST["{$px}show-general"]),
+					'show-custom' => isset($_POST["{$px}show-custom"]),
+					'show-plugin' => isset($_POST["{$px}show-plugin"]),
+				)
+			));
+			die();
+		}
+	}
+
+	public static function screen_options($current, $screen){
+		if ($screen->parent_file != 'online-help')
+			return $current;
+		$px = self::$domain . '-screen-options-';
+		$p = self::$display_options->get();
+		return group(
+			script(array(
+				'code' => <<<EOF
+jQuery(function($) {
+		$("input[type=checkbox][id*={$px}show-]").change(function() {
+			var b = $(this).attr("id").replace(/^{$px}show-/, "");
+			$("#" + b + "-help").css('display', $(this).attr("checked") ? "block" : "none");
+			b = $("#adv-settings").serialize();
+			$("#adv-settings input").attr("disabled", "disabled");
+			$.ajax({
+				type: "POST",
+				cached: false,
+				url: window.location.href,
+				data: b,
+				success: function(msg) {
+					$("#adv-settings input").removeAttr("disabled");
+				}
+			});
+		});
+});
+EOF
+			)),
+			tag('input')->attr(array(
+				'type' => 'hidden',
+				'name' => "{$px}screen-options",
+				'value' => 'Test'
+			)),
+			tag('ul')->append(
+				tag('li')->append(checkbox("{$px}show-general", "{$px}show-general", $p['show-general'], __("Show general help", self::$domain))),
+				tag('li')->append(checkbox("{$px}show-custom", "{$px}show-custom", $p['show-custom'], __("Show custom help", self::$domain))),
+				tag('li')->append(checkbox("{$px}show-plugin", "{$px}show-plugin", $p['show-plugin'], __("Show plugin help", self::$domain)))
+			)
+		);
 	}
 
 	public static function print_scripts() {
@@ -181,7 +276,6 @@ class WP_Easy_Help {
 	}
 
 	public static function rebase_href($matches, $request_base, $asset_base_path, $asset_base_url) {
-//		error_log($asset_base_url);
 		if (preg_match('#^[a-z0-9]+://#', $matches[1]) || preg_match('/^#/', $matches[1]))
 			return $matches[0];
 		if (preg_match('#^(\.\./)+assets#', $matches[1]))
@@ -193,7 +287,6 @@ class WP_Easy_Help {
 		$type = mime_content_type($path);
 		$title = basename($path);
 		$donate = array();
-//		error_log("Filetype of $path is $type");
 		if (preg_match('#^text/#', $type)) {
 			$content = file_get_contents($path);
 			if (preg_match('#<title>(.*?)</title>#s', $content, $matches))
@@ -230,10 +323,10 @@ class WP_Easy_Help {
 	public static function help() {
 		global $current_user;
 		$page = div()->addClass('help');
+		$display_options = self::$display_options->get();
 
 		if (isset($_REQUEST['entry'])) {
 			list($who, $what) = explode('/', $_REQUEST['entry'], 2);
-//			error_log("$who $what");
 			$plugin = array_shift(preg_grep("#{$who}#", self::$plugins));
 			if ($who == 'wordpress') {
 				$base_path = get_home_path();
@@ -282,6 +375,7 @@ class WP_Easy_Help {
 			}
 			$page->append($sidebar);
 		} else {
+			$p = self::$display_options->get();
 			$page->addClass('index');
 			$page->append(h(sprintf(__('Welcome %s', self::$domain), $current_user->data->display_name), 1));
 
@@ -291,7 +385,13 @@ class WP_Easy_Help {
 					));
 			if ($index) {
 				$index = self::load_file($index, 'wordpress', get_home_path(), get_site_url());
-				$page->append(h(__('General', self::$domain), 3), p($index['content']));
+				$index = div(
+					h(__('General', self::$domain), 3),
+					p($index['content'])
+				)->attr('id', 'general-help');
+				if (!$display_options['show-general'])
+					$index->css('display', 'none');
+				$page->append($index);
 			}
 
 			if (is_multisite()) {
@@ -302,13 +402,20 @@ class WP_Easy_Help {
 						));
 				if ($index) {
 					$index = self::load_file($index, 'you', $upd['basedir'], $upd['baseurl']);
-					$page->append(h(__('Individual', self::$domain), 1), p($index['content']));
+					$index = div(
+						h(__('Individual', self::$domain), 3),
+						p($index['content'])
+					)->attr('id', 'custom-help');
+					if (!$display_options['show-custom'])
+						$index->css('display', 'none');
+					$page->append($index);
 				}
 			}
 
 
-			$page->append(h(__('Plugins', self::$domain), 3));
-			$page->append($list = tag('ol'));
+			$plugins_div = div()->attr('id', 'plugin-help');
+			$plugins_div->append(h(__('Plugins', self::$domain), 3));
+			$plugins_div->append($list = tag('ol'));
 			foreach (self::$plugins as $plugin) {
 				$base_path = dirname($plugin);
 				$index = lookup('index.html', array(
@@ -325,6 +432,10 @@ class WP_Easy_Help {
 					);
 				}
 			}
+			if (!$display_options['show-plugin'])
+				$plugins_div->css('display', 'none');
+			$page->append($plugins_div);
+			
 		}
 		echo $page;
 	}
