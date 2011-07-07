@@ -100,14 +100,18 @@ if (!function_exists('tag')) {
 			return $this;
 		}
 
-		public function append($elements = array()) {
+		public function append($elements) {
 			if (func_num_args() > 1) {
 				$elements = func_get_args();
 			}
 			if (is_array($elements)) {
+				for ($i = 0; $i < count($elements); $i++)
+					if (is_array($elements[$i])) {
+						array_splice($elements, $i, 1, $elements[$i]);
+					}
 				$this->children = array_merge($this->children, $elements);
 			} else {
-				array_push($this->children, $elements);
+				$this->children[] = $elements;
 			}
 			return $this;
 		}
