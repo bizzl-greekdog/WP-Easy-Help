@@ -40,3 +40,6 @@
 	display: inline;
 }
 
+.help-settings table * {
+	text-align: center !important;
+}

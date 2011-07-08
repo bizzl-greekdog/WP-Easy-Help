@@ -21,10 +21,6 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/main.php:138
-msgid "Help System"
-msgstr ""
-
 #: src/main.php:258
 msgid "Is this helpful? Then please donate!"
 msgstr ""

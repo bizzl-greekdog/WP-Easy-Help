@@ -136,11 +136,21 @@ class WP_Easy_Help {
 	protected static $domain = 'wp-easy-help';
 	protected static $base = '';
 	protected static $plugins = array();
-	protected static $display_options = 'wp_easy_help_display_options';
+	
+	protected static $display_options = 'wp_easy_help_display';
 	protected static $display_options_default = array(
 				'show-general' => true,
 				'show-custom' => true,
 				'show-plugin' => true,
+	);
+	
+	protected static $filter_options = 'wp_easy_help_filter';
+	protected static $filter_options_default = array(
+		'administrator' => array(),
+		'author' => array(),
+		'editor' => array(),
+		'contributor' => array(),
+		'subscriber' => array()
 	);
 
 	protected static function init_base() {
@@ -156,6 +166,7 @@ class WP_Easy_Help {
 		self::init_base();
 		self::init_l10n();
 		self::$display_options = new WpOption(self::$display_options, self::$display_options_default);
+		self::$filter_options = new WpOption(self::$filter_options, self::$filter_options_default);
 		if (function_exists('wp_get_active_network_plugins'))
 			self::$plugins = wp_get_active_network_plugins();
 		self::$plugins = array_merge(self::$plugins, wp_get_active_and_valid_plugins());
@@ -183,6 +194,13 @@ class WP_Easy_Help {
 			));
 			die();
 		}
+	}
+	
+	public static function get_filters() {
+		foreach (self::$filter_options->get() as $role => $filters)
+			if (current_user_can($role))
+				return $filters;
+		return array();
 	}
 
 	public static function screen_options($current, $screen){
@@ -230,7 +248,8 @@ EOF
 	}
 
 	public static function menu_init() {
-		add_menu_page(__('Help', self::$domain), __('Help System', self::$domain), 'edit_posts', 'online-help', array(__CLASS__, 'help'), '', 3);
+		add_options_page(__('WP Easy Help', self::$domain), __('WP Easy Help', self::$domain), 'manage_options', 'online-help-settings', array(__CLASS__, 'help_settings'));
+		add_menu_page(__('Help', self::$domain), __('Help', self::$domain), 'edit_posts', 'online-help', array(__CLASS__, 'help'), '', 3);
 	}
 
 	public static function do_paypal_button($id) {
@@ -416,12 +435,16 @@ EOF
 			$plugins_div = div()->attr('id', 'plugin-help');
 			$plugins_div->append(h(__('Plugins', self::$domain), 3));
 			$plugins_div->append($list = tag('ol'));
+			$filters = self::get_filters();
 			foreach (self::$plugins as $plugin) {
 				$base_path = dirname($plugin);
+				$base_name = basename(dirname($plugin));
+				if (in_array($base_name, $filters))
+					continue;
 				$index = lookup('index.html', array(
 					join_path($base_path, 'help', get_locale()),
 					join_path($base_path, 'help', 'en_US')
-						));
+				));
 				if ($index) {
 					$p = get_plugin_data($plugin);
 					$index = self::load_file($index, basename($base_path), $base_path, plugin_dir_url($plugin));
@@ -438,6 +461,62 @@ EOF
 			
 		}
 		echo $page;
+	}
+	
+	public static function help_settings() {
+		
+		$nonce_field = 'wp-easy-help-settings';
+		$filters = self::$filter_options->get();
+		
+		if (isset($_POST['set_filter']) && wp_verify_nonce($_POST[$nonce_field], $nonce_field)) {
+			foreach ($filters as $role => $_)
+				$filters[$role] = $_POST[$role];
+			self::$filter_options->set($filters);
+		}
+		
+		$roles = array(
+			'administrator' => __('Administrator', self::$domain),
+			'editor' => __('Editor', self::$domain),
+			'author' => __('Author', self::$domain),
+			'contributor' => __('Contributor', self::$domain),
+			'subscriber' => __('Subscriber', self::$domain),
+		);
+		
+		$header = tag('tr')->append(tag('th')->addClass('manage-column')->attr('scope', 'col')->append('&nbsp;'));
+		foreach ($roles as $role => $display_name)
+			$header->append(tag('th')->addClass('manage-column')->attr('scope', 'col')->append($display_name));
+			
+		$checkboxes = group();
+		foreach (self::$plugins as $plugin) {
+			$base_path = dirname($plugin);
+			$base_name = basename(dirname($plugin));
+			$index = lookup('index.html', array(
+				join_path($base_path, 'help', get_locale()),
+				join_path($base_path, 'help', 'en_US')
+			));
+			if ($index) {
+				$p = get_plugin_data($plugin);
+				$l = tag('tr')->addClass('alternate', 'author-self', 'status-inherit')->append(tag('td')->append($p['Name']));
+				foreach ($roles as $role => $_)
+					$l->append(
+						tag('td')->append(
+							checkbox("{$role}[]", "{$role}-{$b}", in_array($base_name, $filters[$role]), false, $base_name)
+						)
+					);
+				$checkboxes->append($l);
+			}
+		}
+		
+		echo div(tag('form')->attr('method', 'post')->append(
+			wp_nonce_field($nonce_field, $nonce_field, true, false),
+			p(__('Do not show the following plugins in the index table:', self::$domain)),
+			tag('table')->append(
+				tag('thead')->append($header),
+				tag('tbody')->append($checkboxes)
+			)->addClass('wp-list-table', 'widefat', 'fixed'),
+			'<br />',
+			tag('button')->attr(array('type' => 'submit', 'name' => 'set_filter'))->append(__('Submit', self::$domain))->addClass('button-secondary')
+		))->addClass('wrap', 'help-settings');
 	}
 
 }
