@@ -1,4 +1,27 @@
 <?php
+/*
+    Copyright (c) 2011 Benjamin Kleiner <bizzl@users.sourceforge.net>
+ 
+    This file is part of Tags.
+
+    Tags is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Tags is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Tags. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*
+God, I hope we'll all use php 5.3 so this can move into a namespace x_X
+And maybe switch to phpquery...
+*/
 
 if (!function_exists('tag')) {
 
