@@ -68,3 +68,4 @@ In either case you have to comply to a certain structure:
 ## <a name="license"/> License ##
 
 The plugin is licensed under GPLv3
+
