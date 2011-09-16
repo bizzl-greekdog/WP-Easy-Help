@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:	WP Easy Help
-Plugin URI:		http://tacosw.com/htmledit/download.php
+Plugin URI:		
 Description:	A help system that integrates into the wordpress admin panel.
 Version:		1.0.0
 Author:			Benjamin Kleiner, Christoph Fritsch
