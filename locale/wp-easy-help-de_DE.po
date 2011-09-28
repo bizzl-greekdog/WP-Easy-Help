@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nice-navigation-widget 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-27 12:43+0200\n"
-"PO-Revision-Date: 2011-07-05 12:08+0100\n"
-"Last-Translator: Benjamin Kleiner <bizzl@users.sourceforge.net>\n"
+"POT-Creation-Date: 2011-09-28 15:54+0200\n"
+"PO-Revision-Date: 2011-09-28 15:56+0200\n"
+"Last-Translator: Benjamin Kleiner <bizzl@about.me>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -17,40 +17,86 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/main.php:138
+#: main.php:286
+msgid "Show general help"
+msgstr "Allgemeine Hilfe anzeigen"
+
+#: main.php:287
+msgid "Show custom help"
+msgstr "Individuelle Hilfe"
+
+#: main.php:288
+msgid "Show plugin help"
+msgstr "Erweiterungshilfe"
+
+#: main.php:303
+msgid "WP Easy Help"
+msgstr ""
+
+#: main.php:304
 msgid "Help"
 msgstr "Hilfe"
 
-#: src/main.php:138
-msgid "Help System"
-msgstr "Hilfe"
-
-#: src/main.php:258
+#: main.php:458
 msgid "Is this helpful? Then please donate!"
 msgstr "Ist diese Hilfe brauchbar? Dann spende bitte!"
 
-#: src/main.php:278
+#: main.php:480
 msgid "Whoops, looks like this page is missing!"
 msgstr "Hoppla, diese Datei scheint zu fehlen!"
 
-#: src/main.php:283
+#: main.php:486
 #, php-format
 msgid "Welcome %s"
 msgstr "Hallo, %s!"
 
-#: src/main.php:291
+#: main.php:496
 msgid "General"
 msgstr "Allgemein"
 
-#: src/main.php:302
+#: main.php:515
 msgid "Individual"
 msgstr "Individuell"
 
-#: src/main.php:307
+#: main.php:526
 msgid "Plugins"
 msgstr "Erweiterungen"
 
-#: src/tag.php:64
-msgid "This feature requires inline frames. You have iframes disabled or your browser does not support them."
-msgstr "Dieser Bestandteil ben&ouml;tigt eingebettete Frames. Bei Ihnen sind diese deaktiviert oder Ihr Webbrowser unterst&uuml;tzt diese nicht."
+#: main.php:569
+msgid "Administrator"
+msgstr "Administrator"
 
+#: main.php:570
+msgid "Editor"
+msgstr "Editor"
+
+#: main.php:571
+msgid "Author"
+msgstr "Autor"
+
+#: main.php:572
+msgid "Contributor"
+msgstr "Zuarbeiter"
+
+#: main.php:573
+msgid "Subscriber"
+msgstr "Abonnent"
+
+#: main.php:603
+msgid "Do not show the following plugins in the index table:"
+msgstr "F&uuml;r die folgenden Erweiterungen keine Hilfe zeigen:"
+
+#: main.php:609
+msgid "Submit"
+msgstr "Absenden"
+
+#: tag.php:85
+msgid ""
+"This feature requires inline frames. You have iframes disabled or your "
+"browser does not support them."
+msgstr ""
+"Dieser Bestandteil ben&ouml;tigt eingebettete Frames. Bei Ihnen sind diese "
+"deaktiviert oder Ihr Webbrowser unterst&uuml;tzt diese nicht."
+
+#~ msgid "Help System"
+#~ msgstr "Hilfe"

@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Benjamin Kleiner
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: nice-navigation-widget 1.0.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-27 12:43+0200\n"
+"POT-Creation-Date: 2011-09-28 15:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,36 +17,80 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.php:138
+#: main.php:286
+msgid "Show general help"
+msgstr ""
+
+#: main.php:287
+msgid "Show custom help"
+msgstr ""
+
+#: main.php:288
+msgid "Show plugin help"
+msgstr ""
+
+#: main.php:303
+msgid "WP Easy Help"
+msgstr ""
+
+#: main.php:304
 msgid "Help"
 msgstr ""
 
-#: src/main.php:258
+#: main.php:458
 msgid "Is this helpful? Then please donate!"
 msgstr ""
 
-#: src/main.php:278
+#: main.php:480
 msgid "Whoops, looks like this page is missing!"
 msgstr ""
 
-#: src/main.php:283
+#: main.php:486
 #, php-format
 msgid "Welcome %s"
 msgstr ""
 
-#: src/main.php:291
+#: main.php:496
 msgid "General"
 msgstr ""
 
-#: src/main.php:302
+#: main.php:515
 msgid "Individual"
 msgstr ""
 
-#: src/main.php:307
+#: main.php:526
 msgid "Plugins"
 msgstr ""
 
-#: src/tag.php:64
+#: main.php:569
+msgid "Administrator"
+msgstr ""
+
+#: main.php:570
+msgid "Editor"
+msgstr ""
+
+#: main.php:571
+msgid "Author"
+msgstr ""
+
+#: main.php:572
+msgid "Contributor"
+msgstr ""
+
+#: main.php:573
+msgid "Subscriber"
+msgstr ""
+
+#: main.php:603
+msgid "Do not show the following plugins in the index table:"
+msgstr ""
+
+#: main.php:609
+msgid "Submit"
+msgstr ""
+
+#: tag.php:85
 msgid ""
 "This feature requires inline frames. You have iframes disabled or your "
 "browser does not support them."

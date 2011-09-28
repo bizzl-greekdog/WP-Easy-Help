@@ -35,10 +35,9 @@ if (!function_exists('join_path')) {
 	// them using the directory separator.
 	function join_path() {
 		$fuck = func_get_args();
-		for ($i = 0; $i < count($fuck); $i++)
-			if (is_array($fuck[$i]))
-				array_splice($fuck, $i, 1, $fuck[$i]);
-		$f = implode(DIRECTORY_SEPARATOR, $fuck);
+		$flat = (object)array('flat' => array());
+		array_walk_recursive($fuck, create_function('&$v, $k, &$t', '$t->flat[] = $v;'), $flat);
+		$f = implode(DIRECTORY_SEPARATOR, $flat->flat);
 		return preg_replace('/(?<!:)\\' . DIRECTORY_SEPARATOR . '+/', DIRECTORY_SEPARATOR, $f);
 	}
 
@@ -47,16 +46,21 @@ if (!function_exists('join_path')) {
 
 if (!function_exists('mime_content_type')) {
 	
-	// Sh***, mime_content_type is missing!
-	// We'll have to emulate it!
-	function mime_content_type($file) {
-		if (preg_match('/\.(m4v|mp4|webm|mov|avi|ogv)$/i', $file))
-			return 'video/any';
-		if (preg_match('/\.(mp3|wav|au|snd|ogg|oga|aac)$/i', $file))
-			return 'audo/any';
-		if (preg_match('/\.(jp[eg]{1,2}|gif|png|apng|mng|webp)$/i', $file))
-			return 'image/any';
-		return 'text/any';
+	if (class_exists('finfo')) {
+		function mime_content_type($file) {
+			$f = new finfo();
+			return array_shift(explode('; ', $f->file($file, FILEINFO_MIME)));
+		}
+	} else {
+		function mime_content_type($file) {
+			if (preg_match('/\.(m4v|mp4|webm|mov|avi|ogv)$/i', $file))
+				return 'video/any';
+			if (preg_match('/\.(mp3|wav|au|snd|ogg|oga|aac)$/i', $file))
+				return 'audo/any';
+			if (preg_match('/\.(jp[eg]{1,2}|gif|png|apng|mng|webp)$/i', $file))
+				return 'image/any';
+			return 'text/any';
+		}
 	}
 	
 }
