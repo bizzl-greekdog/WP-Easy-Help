@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:	WP Easy Help
-Plugin URI:		
+Plugin URI:
 Description:	A help system that integrates into the wordpress admin panel.
 Version:		1.0.0
 Author:			Benjamin Kleiner, Christoph Fritsch
@@ -11,7 +11,7 @@ License:		LGPL3
 /*
     Copyright (c) 2011 Benjamin Kleiner <bizzl@users.sourceforge.net>
     Copyright (c) 2011 Christoph Fritsch <christoph@orange-d.net>
- 
+
     This file is part of WP Easy Help.
 
     WP Easy Help is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@ if (!function_exists('join_path')) {
 
 
 if (!function_exists('mime_content_type')) {
-	
+
 	if (class_exists('finfo')) {
 		function mime_content_type($file) {
 			$f = new finfo();
@@ -62,7 +62,7 @@ if (!function_exists('mime_content_type')) {
 			return 'text/any';
 		}
 	}
-	
+
 }
 
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'tag.php');
@@ -140,12 +140,12 @@ if (!class_exists('WpOption')) {
 	class WpOption {
 		private $key = '';
 		private $default = '';
-		
+
 		public function	__construct($key, $default) {
 			$this->key = $key;
 			$this->default = $default;
 		}
-		
+
 		public function get() {
 			$v = get_option($this->key, NULL);
 			if ($v === NULL)
@@ -154,11 +154,11 @@ if (!class_exists('WpOption')) {
 				$v = unserialize($v);
 			return $v;
 		}
-		
+
 		public function set($new) {
 			return update_option($this->key, maybe_serialize($new));
 		}
-		
+
 		public function __invoke($p = NULL) {
 			if ($p === NULL)
 				return $this->get();
@@ -176,14 +176,14 @@ class WP_Easy_Help {
 	protected static $domain = 'wp-easy-help';
 	protected static $base = '';
 	protected static $plugins = array();
-	
+
 	protected static $display_options = 'wp_easy_help_display';
 	protected static $display_options_default = array(
 				'show-general' => true,
 				'show-custom' => true,
 				'show-plugin' => true,
 	);
-	
+
 	protected static $filter_options = 'wp_easy_help_filter';
 	protected static $filter_options_default = array(
 		'administrator' => array(),
@@ -204,7 +204,7 @@ class WP_Easy_Help {
 		load_plugin_textdomain(self::$domain, false, $j);
 	}
 
-	/// 
+	///
 	public static function init() {
 		self::init_base();
 		self::init_l10n();
@@ -217,7 +217,7 @@ class WP_Easy_Help {
 		add_action('wp_print_scripts', array(__CLASS__, 'print_scripts'));
 		add_action('admin_init', array(__CLASS__, 'init_scripts'));
 	}
-	
+
 	/**
 	 * Loads necessary scripts and styles. See action @admin_init.
 	 * This function also handles the saving of screen options.
@@ -229,8 +229,8 @@ class WP_Easy_Help {
 			add_filter('screen_settings', array(__CLASS__, 'screen_options'), 10, 2);
 		wp_enqueue_style('woah-main', join_path(plugin_dir_url(__FILE__), 'css', 'main.css'));
 		wp_enqueue_script('jquery');
-		
-		
+
+
 		$px = self::$domain . '-screen-options-';
 		if (isset($_POST["{$px}screen-options"])) {
 			self::$display_options->set(array_merge(
@@ -244,7 +244,7 @@ class WP_Easy_Help {
 			die();
 		}
 	}
-	
+
 	/// Gets filters for the current users role.
 	public static function get_filters() {
 		foreach (self::$filter_options->get() as $role => $filters)
@@ -253,7 +253,7 @@ class WP_Easy_Help {
 		return array();
 	}
 
-	/// Prints the inside of the screen options. See filter @screen_settings. 
+	/// Prints the inside of the screen options. See filter @screen_settings.
 	public static function screen_options($current, $screen){
 		if ($screen->parent_file != 'online-help')
 			return $current;
@@ -308,8 +308,13 @@ EOF
 		add_menu_page(__('Help', self::$domain), __('Help', self::$domain), 'edit_posts', 'online-help', array(__CLASS__, 'help'), '', 3);
 	}
 
-	/// Creates a paypal button.
+	/**
+	 * Creates a paypal button.
+	 * Returns nothing for political reasons:
+	 * @see http://www.regretsy.com/2011/12/05/cats-1-kids-0
+	 */
 	public static function do_paypal_button($id) {
+		return '';
 		list($u, $l) = explode('_', get_locale(), 2);
 		return tag('form')
 						->addClass('donate')
@@ -351,12 +356,12 @@ EOF
 		// Prepare the base url so we can turn absolute pathes into absolute urls
 		if ($asset_base_url[strlen($asset_base_url) - 1] != '/')
 			$asset_base_url .= '/';
-			
+
 		if ($src)
 			$src = str_replace($asset_base_path, $asset_base_url, $src);
 		else
 			$src = 'Whoops, looks like the developer fucked it up!';
-			
+
 		return "src=\"{$src}\"";
 	}
 
@@ -367,10 +372,10 @@ EOF
 	public static function rebase_href($matches, $request_base, $asset_base_path, $asset_base_url) {
 		if (preg_match('#^[a-z0-9]+://#', $matches[1]) || preg_match('/^#/', $matches[1])) // Keep outgoing and anchor links.
 			return $matches[0];
-			
+
 		if (preg_match('#^(\.\./)+assets#', $matches[1])) // looks like the url is pointing to an asset.
 			return 'href="' . join_path($asset_base_url, 'help', preg_replace('#^(\.\./)+#', '', $matches[1])) . '" target="_blank"';
-			
+
 		return "href=\"admin.php?page=online-help&entry={$request_base}/{$matches[1]}\"";
 	}
 
@@ -382,13 +387,13 @@ EOF
 		$type = mime_content_type($path);
 		$title = basename($path);
 		$donate = array();
-		
+
 		if (preg_match('#^text/#', $type)) {
 			$content = file_get_contents($path);
-			
+
 			if (preg_match('#<title>(.*?)</title>#s', $content, $matches)) // Of course we need the files title...
 				$title = $matches[1];
-				
+
 			if (preg_match_all('#<meta[^>]+>#s', $content, $metas)) // ... and some meta tags.
 				foreach ($metas[0] as $meta)
 					if (preg_match('#name="donate"#', $meta) && preg_match('#content="([^"]+)"#', $meta, $matches))
@@ -397,7 +402,7 @@ EOF
 			// Remove all framing tags. We need no head, no body and html tags and doctypes.
 			foreach (array('#</?(body|html)[^>]*>#i', '#<head[^>]*>.*</head>#is', '#<!(?!--)[^>]+>#') as $pattern)
 				$content = preg_replace($pattern, '', $content);
-			
+
 			// Remove all illegal tags. embeds, objects, links and remote scripts can
 			// introduce trojan horses. Use video and audio for multimedia assets.
 			foreach (array('script[^>]*src=', 'embed', 'object', 'link') as $forbidden)
@@ -434,7 +439,7 @@ EOF
 			// Split request into search domain and actual file.
 			list($who, $what) = explode('/', $_REQUEST['entry'], 2);
 			$plugin = array_shift(preg_grep("#{$who}#", self::$plugins));
-			
+
 			if ($who == 'wordpress') { // 'wordpress' is for general help.
 				$base_path = get_home_path();
 				$base_url = get_site_url();
@@ -446,7 +451,7 @@ EOF
 				$base_path = dirname($plugin);
 				$base_url = plugin_dir_url($plugin);
 			}
-			
+
 			// The sidebar contains the currents search domains index.
 			$sidebar = div()->addClass('sidebar');
 
@@ -552,23 +557,23 @@ EOF
 			if (!$display_options['show-plugin'])
 				$plugins_div->css('display', 'none');
 			$page->append($plugins_div);
-			
+
 		}
 		echo $page; // print the whole shit.
 	}
-	
+
 	// Prints the help settings, allowing the admin to hide the help for certain plugins.
 	public static function help_settings() {
-		
+
 		$nonce_field = 'wp-easy-help-settings';
 		$filters = self::$filter_options->get();
-		
+
 		if (isset($_POST['set_filter']) && wp_verify_nonce($_POST[$nonce_field], $nonce_field)) {
 			foreach ($filters as $role => $_)
 				$filters[$role] = $_POST[$role];
 			self::$filter_options->set($filters);
 		}
-		
+
 		$roles = array(
 			'administrator' => __('Administrator', self::$domain),
 			'editor' => __('Editor', self::$domain),
@@ -576,11 +581,11 @@ EOF
 			'contributor' => __('Contributor', self::$domain),
 			'subscriber' => __('Subscriber', self::$domain),
 		);
-		
+
 		$header = tag('tr')->append(tag('th')->addClass('manage-column')->attr('scope', 'col')->append('&nbsp;'));
 		foreach ($roles as $role => $display_name)
 			$header->append(tag('th')->addClass('manage-column')->attr('scope', 'col')->append($display_name));
-			
+
 		$checkboxes = group();
 		foreach (self::$plugins as $plugin) {
 			$base_path = dirname($plugin);
@@ -601,7 +606,7 @@ EOF
 				$checkboxes->append($l);
 			}
 		}
-		
+
 		echo div(tag('form')->attr('method', 'post')->append(
 			wp_nonce_field($nonce_field, $nonce_field, true, false),
 			p(__('Do not show the following plugins in the index table:', self::$domain)),
